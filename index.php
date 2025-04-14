@@ -291,7 +291,34 @@
 
     </div>
   </div>
+  <!-- CTA Ajak Login dan Daftar -->
+<section class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 text-white py-20 px-4 md:px-20 mt-10 relative overflow-hidden">
+  <div class="absolute inset-0 bg-[url('images/bg-texture.png')] opacity-10 bg-cover"></div>
+  
+  <div class="relative max-w-5xl mx-auto text-center">
+    <h2 class="text-4xl md:text-5xl font-bold mb-4 leading-tight">Gabung & Mulai Hari yang Lebih Teratur</h2>
+    <p class="text-lg md:text-xl text-white/90 mb-10">Tampil kece & kulit terawat? Gak perlu ribet, cukup 1 akun untuk semua solusi gaya & skincare harianmu!</p>
+    
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="register.php" class="inline-flex items-center justify-center gap-2 bg-white text-blue-700 font-bold py-3 px-6 rounded-2xl hover:bg-blue-100 shadow-xl transition duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Daftar Sekarang
+      </a>
+      <a href="login.php" class="inline-flex items-center justify-center gap-2 border border-white text-white font-bold py-3 px-6 rounded-2xl hover:bg-white hover:text-blue-700 transition duration-300">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+        Login
+      </a>
+    </div>
+  </div>
 </section>
+
+</section>
+
+
 
 
 
