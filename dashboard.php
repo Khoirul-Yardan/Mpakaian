@@ -14,7 +14,18 @@ $jadwal = $conn->query("SELECT * FROM jadwal WHERE user_id=" . $_SESSION['user_i
 
 // Ambil jadwal untuk hari ini
 $tanggal_hari_ini = date('Y-m-d');
-$sql = "SELECT * FROM jadwal WHERE user_id=" . $_SESSION['user_id'] . " AND tanggal = '$tanggal_hari_ini'";
+$sql = "SELECT jadwal.*, 
+       lemari_pakaian.nama AS nama_pakaian, 
+       lemari_pakaian.foto AS gambar_pakaian, 
+       lemari_skincare.nama AS nama_skincare,
+       lemari_skincare.foto AS gambar_skincare
+FROM jadwal
+LEFT JOIN lemari_pakaian ON jadwal.pakaian_id = lemari_pakaian.id
+LEFT JOIN lemari_skincare ON jadwal.skincare_id = lemari_skincare.id
+WHERE jadwal.user_id = " . $_SESSION['user_id'] . " AND jadwal.tanggal = '$tanggal_hari_ini'
+";
+
+
 $jadwal_hari_ini = $conn->query($sql);
 
 
@@ -53,15 +64,20 @@ $jadwal_hari_ini = $conn->query($sql);
         <a href="lemari_skincare.php" class="text-sm text-pink-600 hover:underline">Lihat detail</a>
       </div>
       <div class="bg-green-100 p-5 rounded-xl shadow hover:shadow-xl transition">
-        <h3 class="text-xl font-semibold text-green-800 mb-2">📅 Jadwal Terdekat</h3>
-        <?php while ($j = $jadwal->fetch_assoc()): ?>
-          <div class="text-sm text-gray-700 mb-1">
-            <?= date('d M Y', strtotime($j['tanggal'])) ?> - <span class="font-medium"><?= htmlspecialchars($j['kegiatan']) ?></span>
-          </div>
-        <?php
-        endwhile; ?>
-        <a href="jadwal.php" class="text-sm text-green-600 hover:underline">Lihat semua</a>
+  <h3 class="text-xl font-semibold text-green-800 mb-3">📅 Jadwal Terdekat</h3>
+  
+  <?php while ($j = $jadwal->fetch_assoc()): ?>
+    <div class="flex items-start justify-between bg-white/60 px-4 py-2 rounded-md mb-2 shadow-sm hover:bg-white/80 transition">
+      <div>
+        <div class="text-sm font-medium text-gray-800"><?= htmlspecialchars($j['kegiatan']) ?></div>
+        <div class="text-xs text-gray-500"><?= date('d M Y', strtotime($j['tanggal'])) ?> | <?= substr($j['jam'], 0, 5) ?> WIB</div>
       </div>
+    </div>
+  <?php endwhile; ?>
+
+  <a href="jadwal.php" class="inline-block mt-3 text-sm font-medium text-green-700 hover:underline">Lihat semua</a>
+</div>
+
     </div>
 
     <div class="text-center mt-6">
@@ -69,41 +85,65 @@ $jadwal_hari_ini = $conn->query($sql);
     </div>
 
     <div class="mt-10">
-  <h3 class="text-xl font-semibold text-gray-800 mb-4">🗓️ Jadwal Kamu Hari Ini</h3>
+  <h3 class="text-2xl font-bold text-gray-800 mb-6">🗓️ Jadwal Kamu Hari Ini</h3>
   <?php if ($jadwal_hari_ini->num_rows > 0): ?>
     <?php while ($row = $jadwal_hari_ini->fetch_assoc()): ?>
-      <div class="border border-gray-200 p-5 rounded-lg shadow-sm mb-4 bg-white">
-        <!-- Tanggal dan Waktu -->
-        <h4 class="text-xl font-semibold"><?= date('d M Y', strtotime($row['tanggal'])) ?> - <?= date('l', strtotime($row['tanggal'])) ?> - <?= substr($row['jam'], 0, 5) ?></h4>
+      <div class="border border-gray-300 p-6 rounded-xl shadow-md mb-6 bg-white transition hover:shadow-lg">
         
-        <!-- Pakaian -->
-        <?php if (!empty($row['pakaian_id'])): ?>
-          <p class="text-sm text-gray-600">👚 Pakaian: <?= htmlspecialchars($row['nama_pakaian']) ?></p>
-        <?php else: ?>
-          <p class="text-sm text-gray-600">👚 Pakaian: Tidak ada pakaian yang terjadwal.</p>
-        <?php endif; ?>
+        <!-- Tanggal dan Waktu -->
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h4 class="text-xl font-semibold text-gray-800"><?= date('d M Y', strtotime($row['tanggal'])) ?></h4>
+            <span class="text-sm text-gray-500"><?= date('l', strtotime($row['tanggal'])) ?> - <?= substr($row['jam'], 0, 5) ?></span>
+          </div>
+          <span class="bg-blue-100 text-blue-700 text-sm font-medium px-3 py-1 rounded-full">
+            <?= date('H:i', strtotime($row['jam'])) ?>
+          </span>
+        </div>
 
-        <!-- Skincare -->
-        <?php if (!empty($row['skincare_id'])): ?>
-          <p class="text-sm text-gray-600">🧴 Skincare: <?= htmlspecialchars($row['nama_skincare']) ?></p>
-        <?php else: ?>
-          <p class="text-sm text-gray-600">🧴 Skincare: Tidak ada skincare yang terjadwal.</p>
-        <?php endif; ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Pakaian -->
+          <div>
+            <h5 class="font-medium text-gray-700 mb-1">👚 Pakaian:</h5>
+            <?php if (!empty($row['pakaian_id'])): ?>
+              <p class="text-gray-600 mb-2"><?= htmlspecialchars($row['nama_pakaian']) ?></p>
+              <?php if (!empty($row['gambar_pakaian'])): ?>
+                <img src="uploads/<?= $row['gambar_pakaian'] ?>" alt="Gambar Pakaian" class="w-32 h-32 object-cover rounded-lg border">
+              <?php endif; ?>
+            <?php else: ?>
+              <p class="text-gray-400 italic">Tidak ada pakaian yang terjadwal.</p>
+            <?php endif; ?>
+          </div>
+
+          <!-- Skincare -->
+          <div>
+            <h5 class="font-medium text-gray-700 mb-1">🧴 Skincare:</h5>
+            <?php if (!empty($row['skincare_id'])): ?>
+              <p class="text-gray-600 mb-2"><?= htmlspecialchars($row['nama_skincare']) ?></p>
+              <?php if (!empty($row['gambar_skincare'])): ?>
+                <img src="uploads/<?= $row['gambar_skincare'] ?>" alt="Gambar Skincare" class="w-32 h-32 object-cover rounded-lg border">
+              <?php endif; ?>
+            <?php else: ?>
+              <p class="text-gray-400 italic">Tidak ada skincare yang terjadwal.</p>
+            <?php endif; ?>
+          </div>
+        </div>
 
         <!-- Catatan -->
-        <p class="text-sm text-gray-600">📝 Catatan: <?= htmlspecialchars($row['catatan']) ?></p>
+        <?php if (!empty($row['catatan'])): ?>
+          <div class="mt-4 border-t pt-3">
+            <p class="text-sm text-gray-600">📝 <span class="font-medium text-gray-800">Catatan:</span> <?= htmlspecialchars($row['catatan']) ?></p>
+          </div>
+        <?php endif; ?>
 
-        <!-- Tombol Edit dan Hapus -->
-        <div class="flex space-x-4 mt-4">
-          <a href="jadwal.php?edit=<?= $row['id'] ?>" class="text-indigo-600 hover:underline">Edit</a>
-          <a href="jadwal.php?hapus=<?= $row['id'] ?>" class="text-red-600 hover:underline">Hapus</a>
-        </div>
       </div>
     <?php endwhile; ?>
   <?php else: ?>
-    <p class="text-gray-500">Tidak ada jadwal untuk hari ini.</p>
+    <p class="text-gray-500 italic">Tidak ada jadwal untuk hari ini.</p>
   <?php endif; ?>
 </div>
+
 
 
   </div>

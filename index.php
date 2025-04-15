@@ -330,11 +330,11 @@
       <p class="text-gray-300">Kami bantu kamu tampil stylish & glowing setiap hari. One place for your daily confidence boost!</p>
     </div>
     <div>
-      <h3 class="text-2xl font-bold mb-4">📞 Hubungi Kami</h3>
+      <h3 class="text-2xl font-bold mb-4">Dibuat Oleh :</h3>
       <ul class="space-y-2 text-gray-300">
-        <li>Email: <a href="#" class="hover:underline">info@kelompok3.com</a></li>
-        <li>Instagram: <a href="#" class="hover:underline">@kelompok3_official</a></li>
-        <li>Alamat: Kampus PSDKU Lamongan</li>
+        <li>Khoirul Yardan Mauluddin Zhorif</li>
+        <li>Angelina Safara</li>
+        <li>Pius Hari Purba</li>
       </ul>
     </div>
   </div>
